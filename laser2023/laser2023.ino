@@ -1,5 +1,5 @@
 #include "Adafruit_MotorShield.h"
-#define BAUD_RATE 115200
+#include "CONFIG.h"
 
 // #define ADDRESS 0x62
 
@@ -24,8 +24,28 @@ void setup(){
 
     // Let's start the motor shield with the default frequency of 1.6kHz. The frequency can always be changed at the top of this file.
     AFMS.begin();
+
+    // Let's give the motor a default rotation speed of 10 RPM:
+    myMotor->setSpeed(DEFAULT_MOTOR_SPEED); //Since myMotor is a pointer we can call the setSpeed function using the ->.
 }
 
 void loop(){
-    
+    read_input();
+    delay(5000);
+}
+
+void read_input() {
+    long start = millis(); // Let's grab the current time.
+    while (! Serial.available()) {//This checks if the Serial line is not available.
+        if ((millis() - start) > 2000) {//This checks if the Serial line has not been available for more than 2 seconds.
+            Serial.println("Timeout!");
+            return;
+        }
+    }
+
+    char input = Serial.read();
+    String input_string = String(input);
+    Serial.println("Testing the read");
+    Serial.println(input_string);
+
 }
