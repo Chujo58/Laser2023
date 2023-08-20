@@ -4,6 +4,7 @@
 
 #define ADDRESS 0x62 //This is used to control the voltage that goes to the laser.
 #define CHLOE_TEST
+#define DEBUG
 // Here we will define all the of global scope variables.
 
 unsigned int counter = 0; //Counts the number of steps done by the stepper motor.
@@ -82,17 +83,42 @@ void read_input() {
         running = true;
         return;
     }
-    //
+    //Tells the Arduino to stop the loop after the current loop
     if (input.substring(0,4) == "STOP") {
         if (!running) return;
         restart = false;
         return;
     }
+    //Aborts the current acquisition loop
     if (input.substring(0,5) == "ABORT") {
         running = false;
         restart = false;
         counter = 0;
         return;
     }
-
+    //Changes the voltage applied to the laser
+    if (input.substring(0,5) == "LASER") {
+        value = int(input.substring(6).c_str());
+        #ifdef DEBUG
+        Serial.println(value);
+        #endif
+        setDAC(value);
+        return;
+    }
+    //Changes the number of steps that we will do with the stepper motor
+    if (input.substring(0,5) == "STEPS") {
+        steps = int(input.substring(6).c_str());
+        #ifdef DEBUG
+        Serial.println(steps);
+        #endif
+        return;
+    }
+    //Changes the delay between each step of the stepper motor
+    if (input.substring(0,5) == "DELAY") {
+        delays = int(input.substring(6).c_str());
+        #ifdef DEBUG
+        Serial.println(delays);
+        #endif
+        return;
+    }
 }
