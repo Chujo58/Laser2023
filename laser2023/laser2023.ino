@@ -53,6 +53,9 @@ void loop(){
     if (!counter && !restart) running = false; //Sets running to false if we are done with the steps and if we are not restarting the loop.
 }
 
+/*
+This function controls the voltage sent to the laser. This was originally made by Mark Orchard-Webb < 2017.12.31 and James Fraser.
+*/
 void setDAC(int voltage) {
     char cmd[3];
     voltage <<= 4;
