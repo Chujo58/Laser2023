@@ -45,12 +45,16 @@ void loop(){
     #endif
     delay(delays); //Delays each step of the motor by a set amount of time.
 
+    Serial.print("DATA: ");
     Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
     Serial.flush();
     counter++;
 
     if (steps == counter) counter = 0; //Resets the counter of steps done.
-    if (!counter && !restart) running = false; //Sets running to false if we are done with the steps and if we are not restarting the loop.
+    if (!counter && !restart) { //Sets running to false if we are done with the steps and if we are not restarting the loop.
+        Serial.print("DATA ACQUISITION OVER!");
+        running = false;
+    }
 }
 
 /*
