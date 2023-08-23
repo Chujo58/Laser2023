@@ -8,11 +8,13 @@
 // Here we will define all the of global scope variables.
 
 unsigned int counter = 0; //Counts the number of steps done by the stepper motor.
-unsigned steps = 1000; //Numbers of steps we want to do in total.
-unsigned delays = 20; //Delay between each step.
-unsigned value = 0; //Information sent to the laser directly.
-bool running = false; //Whether the loop should take data or not.
-bool restart = false; //Whehter we restart the acquisition once done.
+unsigned int steps = 1000; //Numbers of steps we want to do in total.
+unsigned int delays = 20; //Delay between each step.
+unsigned int value = 0; //Information sent to the laser directly.
+// bool running = false; //Whether the loop should take data or not.
+// bool restart = false; //Whehter we restart the acquisition once done.
+
+int mode = 0; //By default, 0 means we stop the code, 1 means it's running and 2 means we want to stop it after acquisition is done.
 
 #ifndef CHLOE_TEST
 // Here we call the motor shield which will connect us to the stepper motor connected.
@@ -38,22 +40,30 @@ void setup(){
 
 void loop(){
     if (Serial.available()) read_input();
-    if (!running) return; //Stops the loop once the data acquisition is over.
+    if (!mode) {//Stops the loop once the data acquisition is over. 
+        Serial.println("Not running!");
+        Serial.println(mode);
+        delay(1500);
+        return;
+    }
 
     #ifndef CHLOE_TEST
     myMotor->step(1, FORWARD, SINGLE); //Move the motor by one step forward.
     #endif
     delay(delays); //Delays each step of the motor by a set amount of time.
 
-    Serial.print("DATA: ");
-    Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
-    Serial.flush();
+    // Serial.print("DATA: ");
+    // Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
+    // Serial.flush();
     counter++;
+    Serial.print(mode);
+    Serial.print("-");
+    Serial.println(counter);
 
     if (steps == counter) counter = 0; //Resets the counter of steps done.
-    if (!counter && !restart) { //Sets running to false if we are done with the steps and if we are not restarting the loop.
-        Serial.print("DATA ACQUISITION OVER!");
-        running = false;
+    if (!counter && (2 == mode)) { //Sets running to false if we are done with the steps and if we are not restarting the loop.
+        Serial.println("DATA ACQUISITION OVER!");
+        mode = 0;
     }
 }
 
@@ -83,29 +93,33 @@ void read_input() {
     }
 
     String input = Serial.readString(); //Reads the Serial monitor.
+    #ifdef DEBUG
+    // Serial.println(input);
+    #endif
     //Start the acquisition loop
     if (input.substring(0,5) == "START") {
-        if (running) return;
+        if (mode) return;
         Serial.println("Starting the acquisition!");
-        running = true;
+        mode = 1;
+        Serial.println(mode);
         return;
     }
     //Tells the Arduino to stop the loop after the current loop
     if (input.substring(0,4) == "STOP") {
-        if (!running) return;
-        restart = false;
+        if (!mode) return;
+        mode = 2;
+        Serial.println(mode);
         return;
     }
     //Aborts the current acquisition loop
     if (input.substring(0,5) == "ABORT") {
-        running = false;
-        restart = false;
+        mode = 0;
         counter = 0;
         return;
     }
     //Changes the voltage applied to the laser
     if (input.substring(0,5) == "LASER") {
-        value = int(input.substring(6).c_str());
+        value = atoi(input.substring(6).c_str());
         #ifdef DEBUG
         Serial.println(value);
         #endif
@@ -114,7 +128,7 @@ void read_input() {
     }
     //Changes the number of steps that we will do with the stepper motor
     if (input.substring(0,5) == "STEPS") {
-        steps = int(input.substring(6).c_str());
+        steps = atoi(input.substring(6).c_str());
         #ifdef DEBUG
         Serial.println(steps);
         #endif
@@ -122,7 +136,7 @@ void read_input() {
     }
     //Changes the delay between each step of the stepper motor
     if (input.substring(0,5) == "DELAY") {
-        delays = int(input.substring(6).c_str());
+        delays = atoi(input.substring(6).c_str());
         #ifdef DEBUG
         Serial.println(delays);
         #endif
