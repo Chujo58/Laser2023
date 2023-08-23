@@ -3,7 +3,7 @@
 #include "Wire.h"
 
 #define ADDRESS 0x62 //This is used to control the voltage that goes to the laser.
-#define CHLOE_TEST
+// #define CHLOE_TEST
 #define DEBUG
 // Here we will define all the of global scope variables.
 
@@ -48,7 +48,7 @@ void loop(){
     }
 
     #ifndef CHLOE_TEST
-    myMotor->step(1, FORWARD, SINGLE); //Move the motor by one step forward.
+    myMotor->step(1, MOTOR_DIRECTION, MOTOR_MODE); //Move the motor by one step forward.
     #endif
     delay(delays); //Delays each step of the motor by a set amount of time.
 

@@ -1,8 +1,10 @@
 import arduino_connect as arduino
 from ValidInputs import ValidInputs as vi
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import os, time
+import matplotlib.pyplot as plt
 
 monitor = arduino.ArduinoControl(debug=True)
 
@@ -50,7 +52,14 @@ if not os.path.isdir("DAQ"):
     
 csv_file_name = f"DAQ/{now}.csv"
 
-df.to_csv(csv_file_name)
+df.to_csv(csv_file_name, index=False)
 
-# monitor.write("LASER 0")
-# monitor.close()
+monitor.write("LASER 0")
+monitor.close()
+
+x_axis = np.arange(0, steps, 1)
+
+fig, axs = plt.subplots(1,1)
+axs.plot(x_axis, data_list, label="Light")
+axs.legend()
+plt.show()
