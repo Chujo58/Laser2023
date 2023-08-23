@@ -1,22 +1,29 @@
+//----------------------------------------------------------------------------
+// Created by : Chloé Legué and Kevin Nguyen
+// Current version date : 2023/08/23
+//----------------------------------------------------------------------------
+/*
+This code was made for the optical experiment with a solid-state laser at McGill University for the PHYS 339 course.
+
+This is the code send to the Arduino board. It allows the control of the solid-state laser, the phototransistor used to take data and the motor to control the rotation of the polarizer and optical slide.
+*/
 #include "Adafruit_MotorShield.h"
 #include "CONFIG.h"
 #include "Wire.h"
 
 #define ADDRESS 0x62 //This is used to control the voltage that goes to the laser.
-// #define CHLOE_TEST
-#define DEBUG
+#define DISABLE_MOTOR //Comment this line out if you want to run the code without the motor.
+#define DISABLE_LASER //Comment this line out if you want to run the code without the laser.
+#define DEBUG //Comment this line out if you want to see the debugging (messages sent via the serial line).
 // Here we will define all the of global scope variables.
 
 unsigned int counter = 0; //Counts the number of steps done by the stepper motor.
 unsigned int steps = 1000; //Numbers of steps we want to do in total.
 unsigned int delays = 20; //Delay between each step.
 unsigned int value = 0; //Information sent to the laser directly.
-// bool running = false; //Whether the loop should take data or not.
-// bool restart = false; //Whehter we restart the acquisition once done.
-
 int mode = 0; //By default, 0 means we stop the code, 1 means it's running and 2 means we want to stop it after acquisition is done.
 
-#ifndef CHLOE_TEST
+#ifndef DISABLE_MOTOR
 // Here we call the motor shield which will connect us to the stepper motor connected.
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
@@ -29,7 +36,7 @@ void setup(){
     // To communicate with Python we will do so via the Serial monitor. So we will first initialize it.
     Serial.begin(BAUD_RATE);
     Serial.println("LASER 2023");
-    #ifndef CHLOE_TEST
+    #ifndef DISABLE_MOTOR
     // Let's start the motor shield with the default frequency of 1.6kHz. The frequency can always be changed at the top of this file.
     AFMS.begin();
 
@@ -47,7 +54,7 @@ void loop(){
         return;
     }
 
-    #ifndef CHLOE_TEST
+    #ifndef DISABLE_MOTOR
     myMotor->step(1, MOTOR_DIRECTION, MOTOR_MODE); //Move the motor by one step forward.
     #endif
     delay(delays); //Delays each step of the motor by a set amount of time.
@@ -56,9 +63,6 @@ void loop(){
     Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
     Serial.flush();
     counter++;
-    // Serial.print(mode);
-    // Serial.print("-");
-    // Serial.println(counter);
 
     if (steps == counter) counter = 0; //Resets the counter of steps done.
     if (!counter && (2 == mode)) { //Sets running to false if we are done with the steps and if we are not restarting the loop.
@@ -93,9 +97,6 @@ void read_input() {
     }
 
     String input = Serial.readString(); //Reads the Serial monitor.
-    #ifdef DEBUG
-    // Serial.println(input);
-    #endif
     //Start the acquisition loop
     if (input.substring(0,5) == "START") {
         if (mode) return;
@@ -123,7 +124,7 @@ void read_input() {
         #ifdef DEBUG
         Serial.println(value);
         #endif
-        #ifndef CHLOE_TEST
+        #ifndef DISABLE_LASER
         setDAC(value);
         #endif
         return;

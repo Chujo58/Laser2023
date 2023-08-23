@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------------
+# Created by : Chloé Legué and Kevin Nguyen
+# Current version date : 2023/08/23
+#----------------------------------------------------------------------------
+"""
+This code was made for the optical experiment with a solid-state laser at McGill University for the PHYS 339 course.
+
+This is the Python code that runs the commands send to the Arduino. All input verifications are done in here to simplify the Arduino/C++ code.
+"""
 import arduino_connect as arduino
 from ValidInputs import ValidInputs as vi
 import pandas as pd
@@ -62,4 +71,6 @@ x_axis = np.arange(0, steps, 1)
 fig, axs = plt.subplots(1,1)
 axs.plot(x_axis, data_list, label="Light")
 axs.legend()
+axs.set_xlabel("Step")
+axs.set_ylabel("Light level from the phototransistor")
 plt.show()

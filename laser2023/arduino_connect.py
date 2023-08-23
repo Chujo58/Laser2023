@@ -1,3 +1,13 @@
+#----------------------------------------------------------------------------
+# Created by : Chloé Legué and Kevin Nguyen
+# Current version date : 2023/08/23
+#----------------------------------------------------------------------------
+"""
+This code can be used as a general way to control an Arduino using the Serial monitor in Python. In the solid-state laser experiment, the Arduino code uses a `CONFIG.h` file which contains the `BAUD_RATE` and the `COM` port. 
+This is to simplify the Python code so that you do not have to manually enter the baud rate and COM port. 
+If you did not properly set the COM port, the code will simply not be able to find the Arduino board and will not be able to communicate properly to it.
+The baud rate is shared with the Arduino code, so you do not have to worry about setting it up properly.
+"""
 import serial
 
 SERIAL_PORT = ""
