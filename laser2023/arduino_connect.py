@@ -81,7 +81,7 @@ class ArduinoControl:
         str
             Message from the Arduino.
         """
-        if self.debug: print("Waitinf for a response from the arduino...")
+        if self.debug: print("Waiting for a response from the arduino...")
         data_str = self.device.readline().decode().split('\r\n')[0]
         if self.debug: print(f"Got response: {data_str}")
         return data_str

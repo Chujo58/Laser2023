@@ -43,7 +43,7 @@ void loop(){
     if (!mode) {//Stops the loop once the data acquisition is over. 
         Serial.println("Not running!");
         Serial.println(mode);
-        delay(1500);
+        delay(1000);
         return;
     }
 
@@ -52,13 +52,13 @@ void loop(){
     #endif
     delay(delays); //Delays each step of the motor by a set amount of time.
 
-    // Serial.print("DATA: ");
-    // Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
-    // Serial.flush();
+    Serial.print("DATA: ");
+    Serial.println(analogRead(PHOTO_TRANSISTOR_PIN));
+    Serial.flush();
     counter++;
-    Serial.print(mode);
-    Serial.print("-");
-    Serial.println(counter);
+    // Serial.print(mode);
+    // Serial.print("-");
+    // Serial.println(counter);
 
     if (steps == counter) counter = 0; //Resets the counter of steps done.
     if (!counter && (2 == mode)) { //Sets running to false if we are done with the steps and if we are not restarting the loop.
@@ -123,7 +123,9 @@ void read_input() {
         #ifdef DEBUG
         Serial.println(value);
         #endif
+        #ifndef CHLOE_TEST
         setDAC(value);
+        #endif
         return;
     }
     //Changes the number of steps that we will do with the stepper motor

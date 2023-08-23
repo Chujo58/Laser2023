@@ -1,2 +1,3 @@
 .vscode
 laser2023/__pycache__
+laser2023/DAQ/*

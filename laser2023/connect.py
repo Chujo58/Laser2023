@@ -8,21 +8,22 @@ monitor = arduino.ArduinoControl(debug=True)
 
 print("Enter the number of steps you want the motor to do!")
 steps = vi.IntCMDInput()
-print("Enter the voltage of the laser!")
-laser_voltage = vi.IntCMDInputFromA(0, 4095)
-print("Enter the delay in milliseconds between each step of the motor!")
-delay = vi.IntCMDInput()
-
-monitor.write(f"LASER {laser_voltage}")
-time.sleep(2)
 monitor.write(f"STEPS {steps}")
 time.sleep(2)
+
+print("Enter the voltage of the laser!")
+laser_voltage = vi.IntCMDInputFromA(0, 4095)
+monitor.write(f"LASER {laser_voltage}")
+time.sleep(2)
+
+print("Enter the delay in milliseconds between each step of the motor!")
+delay = vi.IntCMDInput()
 monitor.write(f"DELAY {delay}")
+
 time.sleep(2)
 monitor.write("START")
 time.sleep(2)
 monitor.write("STOP")
-
 time.sleep(2)
 
 data_list = []
