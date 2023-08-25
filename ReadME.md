@@ -1,7 +1,7 @@
 # Who to contact in case the code doesn't work?
 Here are the two people who contributed to this code: Chloé Legué and Kevin Nguyen. If you need to contact them because of coding issues here are their emails:
 * Chloé : chloe.legue@mail.mcgill.ca
-* Kevin : xyan.g.nguyen@mail.mcgill.ca
+* Kevin : xuan.g.nguyen@mail.mcgill.ca
 
 # How to run the code
 
