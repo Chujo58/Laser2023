@@ -12,8 +12,8 @@ This is the code send to the Arduino board. It allows the control of the solid-s
 #include "Wire.h"
 
 #define ADDRESS 0x62 //This is used to control the voltage that goes to the laser.
-#define DISABLE_MOTOR //Comment this line out if you want to run the code without the motor.
-#define DISABLE_LASER //Comment this line out if you want to run the code without the laser.
+// #define DISABLE_MOTOR //Comment this line out if you want to run the code without the motor.
+// #define DISABLE_LASER //Comment this line out if you want to run the code without the laser.
 #define DEBUG //Comment this line out if you want to see the debugging (messages sent via the serial line).
 // Here we will define all the of global scope variables.
 
